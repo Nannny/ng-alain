@@ -11,14 +11,13 @@ import { HeaderI18nComponent } from '../basic/widgets/i18n.component';
   selector: 'layout-passport',
   template: `
     <div class="container">
-      <header-i18n showLangText="false" class="langs" />
       <div class="wrap">
         <div class="top">
           <div class="head">
             <img class="logo" src="./assets/logo-color.svg" />
-            <span class="title">NG-ALAIN</span>
+            <span class="title">xxxx</span>
           </div>
-          <div class="desc">武林中最有影响力的《葵花宝典》；欲练神功，挥刀自宫</div>
+          <div class="desc"></div>
         </div>
         <router-outlet />
         <global-footer [links]="links">

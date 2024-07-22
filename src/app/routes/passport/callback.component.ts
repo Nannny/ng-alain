@@ -5,11 +5,10 @@ import { SettingsService } from '@delon/theme';
 @Component({
   selector: 'app-callback',
   template: ``,
-  providers: [SocialService],
+  providers: [],
   standalone: true
 })
 export class CallbackComponent implements OnInit {
-  private readonly socialService = inject(SocialService);
   private readonly settingsSrv = inject(SettingsService);
   @Input() type = '';
 
@@ -29,6 +28,5 @@ export class CallbackComponent implements OnInit {
       ...this.settingsSrv.user,
       ...info
     });
-    this.socialService.callback(info);
   }
 }

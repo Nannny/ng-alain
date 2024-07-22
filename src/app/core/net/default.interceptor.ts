@@ -1,8 +1,9 @@
-import { HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest, HttpResponseBase } from '@angular/common/http';
+import { HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest, HttpResponse, HttpResponseBase } from '@angular/common/http';
 import { Injector, inject } from '@angular/core';
-import { IGNORE_BASE_URL, _HttpClient } from '@delon/theme';
+import { IGNORE_BASE_URL, _HttpClient, CUSTOM_ERROR, RAW_BODY } from '@delon/theme';
 import { environment } from '@env/environment';
-import { Observable, of, throwError, mergeMap } from 'rxjs';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { Observable, of, throwError, mergeMap, catchError } from 'rxjs';
 
 import { ReThrowHttpError, checkStatus, getAdditionalHeaders, toLogin } from './helper';
 import { tryRefreshToken } from './refresh-token';
@@ -17,28 +18,31 @@ function handleData(injector: Injector, ev: HttpResponseBase, req: HttpRequest<a
       //  错误内容：{ status: 1, msg: '非法参数' }
       //  正确内容：{ status: 0, response: {  } }
       // 则以下代码片断可直接适用
-      // if (ev instanceof HttpResponse) {
-      //   const body = ev.body;
-      //   if (body && body.status !== 0) {
-      //     const customError = req.context.get(CUSTOM_ERROR);
-      //     if (customError) injector.get(NzMessageService).error(body.msg);
-      //     return customError ? throwError(() => ({ body, _throw: true }) as ReThrowHttpError) : of({});
-      //   } else {
-      //     // 返回原始返回体
-      //     if (req.context.get(RAW_BODY) || ev.body instanceof Blob) {
-      //       return of(ev);
-      //     }
-      //     // 重新修改 `body` 内容为 `response` 内容，对于绝大多数场景已经无须再关心业务状态码
-      //     return of(new HttpResponse({ ...ev, body: body.response } as any));
-      //     // 或者依然保持完整的格式
-      //     return of(ev);
-      //   }
-      // }
+      if (ev instanceof HttpResponse) {
+        const body = ev.body;
+        if (body && body.code !== 0) {
+          injector.get(NzMessageService).error(body.msg);
+          return throwError(() => ({ body, _throw: true }) as ReThrowHttpError);
+        } else {
+          // 返回原始返回体
+          if (req.context.get(RAW_BODY) || ev.body instanceof Blob) {
+            return of(ev);
+          }
+
+          // 重新修改 `body` 内容为 `response` 内容，对于绝大多数场景已经无须再关心业务状态码
+          return of(new HttpResponse({ ...ev, body: body } as any));
+          // 或者依然保持完整的格式
+          // return of(ev);
+        }
+      }
+      break;
+    case 400:
+      console.log(324);
       break;
     case 401:
-      if (environment.api.refreshTokenEnabled && environment.api.refreshTokenType === 're-request') {
-        return tryRefreshToken(injector, ev, req, next);
-      }
+      // if (environment.api.refreshTokenEnabled && environment.api.refreshTokenType === 're-request') {
+      //   return tryRefreshToken(injector, ev, req, next);
+      // }
       toLogin(injector);
       break;
     case 403:
@@ -79,7 +83,7 @@ export const defaultInterceptor: HttpInterceptorFn = (req, next) => {
       }
       // 若一切都正常，则后续操作
       return of(ev);
-    })
-    // catchError((err: HttpErrorResponse) => handleData(injector, err, newReq, next))
+    }),
+    catchError((err: HttpErrorResponse) => handleData(injector, err, newReq, next))
   );
 };

@@ -18,6 +18,7 @@ const THIRDMODULES: Array<Type<any>> = [];
 // #region your componets & directives
 const COMPONENTS: Array<Type<any>> = [];
 const DIRECTIVES: Array<Type<any>> = [];
+
 // #endregion
 
 @NgModule({

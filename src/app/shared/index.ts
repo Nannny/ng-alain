@@ -9,3 +9,7 @@ export * from './shared.module';
 export * from './json-schema/index';
 export * from './st-widget/index';
 export * from './cell-widget/index';
+
+// base class
+export * from './base.component';
+export * from './R';

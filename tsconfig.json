@@ -36,6 +36,18 @@
       ],
       "@_mock": [
         "_mock/index"
+      ],
+      "@store": [
+        "src/store/index"
+      ],
+      "@services": [
+        "src/app/shared/services/index"
+      ],
+      "@resolvers": [
+        "src/app/shared/resolvers/index"
+      ],
+      "@models": [
+        "src/app/shared/models/index"
       ]
     }
   },

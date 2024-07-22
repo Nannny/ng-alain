@@ -1,8 +1,11 @@
 import { HttpHeaders, HttpResponseBase } from '@angular/common/http';
 import { Injector, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { DA_SERVICE_TOKEN } from '@delon/auth';
+import { DA_SERVICE_TOKEN, TokenService } from '@delon/auth';
 import { ALAIN_I18N_TOKEN } from '@delon/theme';
+import { User } from '@models';
+import { Store } from '@ngxs/store';
+import { NormalActions, NormalStoreState } from '@store';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 export interface ReThrowHttpError {
@@ -29,11 +32,13 @@ export const CODEMESSAGE: { [key: number]: string } = {
 };
 
 export function goTo(injector: Injector, url: string): void {
-  setTimeout(() => injector.get(Router).navigateByUrl(url));
+  setTimeout(() => injector.get(Router).navigateByUrl(url), 800);
 }
 
 export function toLogin(injector: Injector): void {
   injector.get(NzNotificationService).error(`未登录或登录已过期，请重新登录。`, ``);
+  injector.get(DA_SERVICE_TOKEN).clear();
+  injector.get(Store).dispatch(new NormalActions.UserLogoutAction());
   goTo(injector, injector.get(DA_SERVICE_TOKEN).login_url!);
 }
 
@@ -42,6 +47,14 @@ export function getAdditionalHeaders(headers?: HttpHeaders): { [name: string]: s
   const lang = inject(ALAIN_I18N_TOKEN).currentLang;
   if (!headers?.has('Accept-Language') && lang) {
     res['Accept-Language'] = lang;
+  }
+  res['tenant'] = 'MDAwMA==';
+  res['Authorization'] = 'Basic bGFtcF93ZWI6bGFtcF93ZWJfc2VjcmV0';
+
+  const normal$ = inject(Store).selectSignal(NormalStoreState.getNormal);
+  if (normal$() && normal$().user) {
+    const user: User = normal$().user;
+    res['token'] = `Bearer ${user.token}`;
   }
 
   return res;

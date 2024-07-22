@@ -1,6 +1,7 @@
+import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { default as ngLang } from '@angular/common/locales/zh';
-import { ApplicationConfig, EnvironmentProviders, Provider } from '@angular/core';
+import { ApplicationConfig, EnvironmentProviders, importProvidersFrom, Provider } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
   provideRouter,
@@ -12,20 +13,25 @@ import {
 } from '@angular/router';
 import { I18NService, defaultInterceptor, provideBindAuthRefresh, provideStartup } from '@core';
 import { provideCellWidgets } from '@delon/abc/cell';
+import { provideReuseTabConfig } from '@delon/abc/reuse-tab';
 import { provideSTWidgets } from '@delon/abc/st';
 import { authSimpleInterceptor, provideAuth } from '@delon/auth';
 import { provideSFConfig } from '@delon/form';
 import { AlainProvideLang, provideAlain, zh_CN as delonLang } from '@delon/theme';
 import { AlainConfig } from '@delon/util/config';
 import { environment } from '@env/environment';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { getActionTypeFromInstance, NGXS_PLUGINS, provideStore } from '@ngxs/store';
 import { CELL_WIDGETS, SF_WIDGETS, ST_WIDGETS } from '@shared';
+import { DEVTOOLS_REDUX_CONFIG, LOGGER_CONFIG, logoutPlugin, OPTIONS_CONFIG, STATES_MODULES } from '@store';
 import { zhCN as dateLang } from 'date-fns/locale';
 import { NzConfig, provideNzConfig } from 'ng-zorro-antd/core/config';
 import { zh_CN as zorroLang } from 'ng-zorro-antd/i18n';
 
-import { routes } from './routes/routes';
 import { ICONS } from '../style-icons';
 import { ICONS_AUTO } from '../style-icons-auto';
+import { routes } from './routes/routes';
 
 const defaultLang: AlainProvideLang = {
   abbr: 'zh-CN',
@@ -65,7 +71,20 @@ const providers: Array<Provider | EnvironmentProviders> = [
   provideSTWidgets(...ST_WIDGETS),
   provideSFConfig({ widgets: SF_WIDGETS }),
   provideStartup(),
-  ...(environment.providers || [])
+  provideReuseTabConfig(),
+  provideStore(STATES_MODULES, OPTIONS_CONFIG),
+  importProvidersFrom(NgxsReduxDevtoolsPluginModule.forRoot(DEVTOOLS_REDUX_CONFIG)),
+  importProvidersFrom(NgxsLoggerPluginModule.forRoot(LOGGER_CONFIG)),
+  ...(environment.providers || []),
+  {
+    provide: NGXS_PLUGINS,
+    useValue: logoutPlugin,
+    multi: true
+  },
+  {
+    provide: LocationStrategy,
+    useClass: PathLocationStrategy
+  }
 ];
 
 // If you use `@delon/auth` to refresh the token, additional registration `provideBindAuthRefresh` is required
