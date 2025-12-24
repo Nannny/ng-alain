@@ -10,7 +10,7 @@ export const environment = {
   production: false,
   useHash: true,
   api: {
-    baseUrl: 'http://127.0.0.1:8760/api/',
+    baseUrl: 'http://127.0.0.1:18760/',
     refreshTokenEnabled: true,
     refreshTokenType: 'auth-refresh'
   },

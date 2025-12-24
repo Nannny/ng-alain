@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { ReuseTabComponent } from '@delon/abc/reuse-tab';
@@ -11,6 +12,7 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 
+import enums from '../blank/blank.component';
 import { HeaderClearStorageComponent } from './widgets/clear-storage.component';
 import { HeaderFullScreenComponent } from './widgets/fullscreen.component';
 import { HeaderI18nComponent } from './widgets/i18n.component';
@@ -25,11 +27,7 @@ import { HeaderUserComponent } from './widgets/user.component';
   selector: 'layout-basic',
   template: `
     <layout-default [options]="options" [content]="contentTpl" [customError]="null">
-      <layout-default-header-item direction="left" hidden="pc">
-        <div layout-default-header-item-trigger (click)="searchToggleStatus = !searchToggleStatus">
-          <i nz-icon nzType="search"></i>
-        </div>
-      </layout-default-header-item>
+      <layout-default-header-item direction="left" />
       <layout-default-header-item direction="right">
         <header-notify />
       </layout-default-header-item>
@@ -74,7 +72,8 @@ import { HeaderUserComponent } from './widgets/user.component';
     HeaderFullScreenComponent,
     HeaderUserComponent,
     ReuseTabComponent,
-    HeaderUserComponent
+    HeaderUserComponent,
+    NgTemplateOutlet
   ]
 })
 export class LayoutBasicComponent {

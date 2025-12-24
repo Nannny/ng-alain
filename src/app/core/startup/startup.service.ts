@@ -149,13 +149,6 @@ export class StartupService {
           ]
         },
         {
-          text: '快捷菜单',
-          i18n: 'menu.shortcut',
-          icon: 'anticon-rocket',
-          shortcutRoot: true,
-          children: []
-        },
-        {
           text: '小部件',
           i18n: 'menu.widgets',
           link: '/widgets',

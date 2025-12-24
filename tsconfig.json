@@ -48,7 +48,7 @@
       ],
       "@models": [
         "src/app/shared/models/index"
-      ]
+      ],
     }
   },
   "angularCompilerOptions": {

@@ -12,7 +12,7 @@
     {
       "text": "主导航",
       "i18n": "menu.main",
-      "group": true,
+      "group": false,
       "hideInBreadcrumb": true,
       "children": [
         {

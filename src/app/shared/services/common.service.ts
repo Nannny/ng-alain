@@ -12,6 +12,6 @@ export class CommonService {
   }
 
   getMenus(): Observable<R> {
-    return this.http.get<R>(`authority/sysTModule/menus`);
+    return this.http.post<R>(`authority/sysTModule/menus`,{});
   }
 }
