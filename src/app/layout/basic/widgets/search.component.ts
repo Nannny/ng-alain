@@ -50,7 +50,6 @@ import { BehaviorSubject, debounceTime, distinctUntilChanged, tap } from 'rxjs';
     </nz-autocomplete>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [FormsModule, I18nPipe, NgTemplateOutlet, NzInputModule, NzIconModule, NzAutocompleteModule]
 })
 export class HeaderSearchComponent implements AfterViewInit, OnDestroy {

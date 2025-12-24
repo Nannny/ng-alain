@@ -25,7 +25,6 @@ import { finalize } from 'rxjs';
   styleUrls: ['./login.component.less'],
   providers: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     RouterLink,
     ReactiveFormsModule,

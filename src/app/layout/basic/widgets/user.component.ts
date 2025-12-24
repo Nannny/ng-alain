@@ -39,7 +39,6 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
     </nz-dropdown-menu>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [RouterLink, NzDropDownModule, NzMenuModule, NzIconModule, I18nPipe, NzAvatarModule]
 })
 export class HeaderUserComponent extends BaseComponent {

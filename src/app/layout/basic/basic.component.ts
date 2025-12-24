@@ -50,7 +50,6 @@ import { HeaderUserComponent } from './widgets/user.component';
     }
     <theme-btn />
   `,
-  standalone: true,
   imports: [
     RouterOutlet,
     RouterLink,
